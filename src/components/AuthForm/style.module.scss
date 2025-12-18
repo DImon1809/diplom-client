@@ -1,0 +1,100 @@
+.auth__form {
+  width: 400px;
+  height: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .title {
+    font-size: 22px;
+  }
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    margin-top: 20px;
+  }
+
+  .input__wrapper {
+    width: 100%;
+    position: relative;
+
+    .input {
+      width: 100%;
+      border: none;
+      outline: 0;
+      border-bottom: 2px solid black;
+      padding: 2px 6px;
+      font-size: 16px;
+
+      //   &:focus ~ .label {
+      //     top: -22px;
+      //   }
+
+      &:focus ~ .label,
+      &:not(:placeholder-shown) ~ .label {
+        top: -22px;
+      }
+    }
+
+    .label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+  }
+
+  .send__button {
+    all: unset;
+    width: 200px;
+    height: 42px;
+    background-color: black;
+    outline: 0;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    // text-transform: uppercase;
+    transition: all 0.3s ease;
+
+    &.loading {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &:hover {
+      opacity: 0.5;
+      transform: translateY(-5px);
+    }
+
+    .spinner {
+      width: 25px;
+      height: 25px;
+      display: block;
+      border: 3px dotted #fff;
+      border-radius: 50%;
+      animation: rotate infinite linear 1s;
+    }
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,14 @@
+.parameter__card {
+  margin-bottom: 16px;
+
+  .parameter__wrapper {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .buttons {
+    padding: 8px;
+  }
+}
