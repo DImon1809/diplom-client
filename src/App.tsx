@@ -6,8 +6,8 @@ import { AuthForm } from "./components/AuthForm";
 import { useAppDispatch, useAppSelector } from "./store";
 import { setAuthStatus } from "./store/user/userSlice";
 import { ProductPage } from "./components/ProductPage";
-// import { ProductParamsList } from "./components/ProductParamsList";
-// import { ProductPage } from "./components/ProductPage";
+import { CardsPage } from "./components/CardsPage";
+import { Route, Routes } from "react-router-dom";
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -26,8 +26,21 @@ export const App = () => {
     <>
       <Navbar />
       {!isAuthorized && <AuthForm />}
-      {/* {isAuthorized && <ProductParamsList />} */}
-      {isAuthorized && <ProductPage />}
+
+      {isAuthorized ? (
+        <>
+          <Routes>
+            <Route path="/" element={<ProductPage />} />
+            <Route path="/cards/:productId" element={<CardsPage />} />
+          </Routes>
+        </>
+      ) : (
+        <>
+          <Routes>
+            <Route path="/" element={<AuthForm />} />
+          </Routes>
+        </>
+      )}
     </>
   );
 };

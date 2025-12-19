@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { RootType } from "./index";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3000",
+  baseUrl: "http://localhost:4000",
   prepareHeaders: (headers, { getState }) => {
     const token =
       (getState() as RootType).userSlice.jwtToken ||
@@ -21,6 +21,7 @@ const retryQuery = retry(baseQuery, { maxRetries: 0 });
 
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
+  tagTypes: ["GetParams"],
   baseQuery: retryQuery,
   refetchOnMountOrArgChange: true,
   endpoints: () => ({}),

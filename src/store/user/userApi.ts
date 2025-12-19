@@ -12,17 +12,31 @@ export const userApi = serviceApi.injectEndpoints({
       }
     >({
       query: (body) => ({
-        url: "/user/login",
+        url: "/api/login",
         method: "POST",
         body,
       }),
     }),
-    current: builder.query<string, void>({
+    current: builder.query<
+      {
+        id: number;
+        email: string;
+        parameters: {
+          id: number;
+          name: string;
+          unit: string;
+          details: string[];
+          createdAt: string;
+        }[];
+      },
+      void
+    >({
       query: () => ({
-        url: "/user/current",
+        url: "/api/current",
       }),
+      providesTags: ["GetParams"],
     }),
   }),
 });
 
-export const { useLoginMutation, useLazyCurrentQuery } = userApi;
+export const { useLoginMutation, useCurrentQuery } = userApi;

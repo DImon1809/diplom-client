@@ -3,9 +3,13 @@ import { useState } from "react";
 import { MeasurementsModal } from "../Modals/MeasurementsModal";
 import { XRChart } from "../XRChart";
 
+import { useNavigate } from "react-router-dom";
+
 import styles from "./style.module.scss";
 
 export const ParameterCard = ({ parameter, number }: any) => {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const [showList, setShowList] = useState(false);
   const [showChart, setShowChart] = useState(false);
@@ -21,7 +25,10 @@ export const ParameterCard = ({ parameter, number }: any) => {
       {open && (
         <div className={styles.buttons}>
           <button onClick={() => setShowList(true)}>Список</button>
-          <button style={{ marginLeft: 8 }} onClick={() => setShowChart(true)}>
+          <button
+            style={{ marginLeft: 8 }}
+            onClick={() => navigate(`/cards/${parameter?.id || ""}`)}
+          >
             Контрольные карты
           </button>
         </div>

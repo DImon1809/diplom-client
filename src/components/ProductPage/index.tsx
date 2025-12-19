@@ -1,7 +1,7 @@
 // ProductPage.tsx
 // import { product } from "../mockData";
 import { ParameterCard } from "../ParameterCard";
-import { useLazyCurrentQuery } from "../../store/user/userApi";
+import { useCurrentQuery } from "../../store/user/userApi";
 
 import styles from "./style.module.scss";
 
@@ -28,18 +28,19 @@ const product = {
 };
 
 export const ProductPage = () => {
-  const [current] = useLazyCurrentQuery();
+  const { isLoading, data } = useCurrentQuery();
+
   return (
     <div className={styles.product__page}>
       <h1>{product.name}</h1>
 
-      <button onClick={() => current()}>click</button>
-
-      <div className={styles.parameters}>
-        {product.parameters.map((p, key) => (
-          <ParameterCard key={key} parameter={p} number={key + 1} />
-        ))}
-      </div>
+      {!isLoading && (
+        <div className={styles.parameters}>
+          {data?.parameters.map((p, key) => (
+            <ParameterCard key={key} parameter={p} number={key + 1} />
+          )) ?? "Ничего нет"}
+        </div>
+      )}
     </div>
   );
 };
