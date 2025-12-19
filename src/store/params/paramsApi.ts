@@ -20,6 +20,8 @@ export const paramsApi = serviceApi.injectEndpoints({
       {
         id: 1;
         details: string[];
+        upperLimit?: string;
+        lowerLimit?: string;
       }
     >({
       query: (body) => ({

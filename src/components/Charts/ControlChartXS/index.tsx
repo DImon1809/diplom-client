@@ -10,7 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useLazyCalculateXRmiddleQuery } from "../../../store/calculate/calculateApi";
+import { useLazyCalculateXScardQuery } from "../../../store/calculate/calculateApi";
 
 ChartJS.register(
   CategoryScale,
@@ -24,17 +24,18 @@ ChartJS.register(
 
 interface DataItem {
   xbar: number;
-  r: number;
+  s: number;
 }
 
-export const XRmiddle = () => {
-  const [calculate, { isLoading }] = useLazyCalculateXRmiddleQuery();
+export const ControlChartXS = () => {
+  const [calculate, { isLoading }] = useLazyCalculateXScardQuery();
+
   const [chartData, setChartData] = useState<DataItem[]>([]);
   const [XbarLimits, setXbarLimits] = useState<{
     UCL: number;
     LCL: number;
   } | null>(null);
-  const [Rlimits, setRlimits] = useState<{ UCL: number; LCL: number } | null>(
+  const [Slimits, setSlimits] = useState<{ UCL: number; LCL: number } | null>(
     null
   );
 
@@ -42,10 +43,9 @@ export const XRmiddle = () => {
     try {
       const result = await calculate().unwrap();
 
-      // Устанавливаем данные и пределы из ответа сервера
       setChartData(result.chartData);
       setXbarLimits(result.XbarLimits);
-      setRlimits(result.Rlimits);
+      setSlimits(result.Slimits);
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
     }
@@ -54,9 +54,9 @@ export const XRmiddle = () => {
   if (!chartData.length) {
     return (
       <div>
-        Нажмите для построения X̄-R
+        Нажмите для построения X̄–S
         <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить контрольные карты"}
+          {isLoading ? "Загрузка..." : "Построить X̄–S карту"}
         </button>
       </div>
     );
@@ -64,7 +64,7 @@ export const XRmiddle = () => {
 
   const labels = chartData.map((_, i) => `Подгруппа ${i + 1}`);
 
-  // Данные для графика X̄
+  // ===== X̄-карта =====
   const xbarChartData = {
     labels,
     datasets: [
@@ -92,27 +92,26 @@ export const XRmiddle = () => {
     ],
   };
 
-  // Данные для графика R
-  const rChartData = {
+  const sChartData = {
     labels,
     datasets: [
       {
-        label: "R (Размах)",
-        data: chartData.map((d) => d.r),
+        label: "S (Стандартное отклонение)",
+        data: chartData.map((d) => d.s),
         borderColor: "green",
         backgroundColor: "green",
         tension: 0.2,
       },
       {
-        label: "UCL R",
-        data: Array(chartData.length).fill(Rlimits?.UCL),
+        label: "UCL S",
+        data: Array(chartData.length).fill(Slimits?.UCL),
         borderColor: "red",
         borderDash: [5, 5],
         pointRadius: 0,
       },
       {
-        label: "LCL R",
-        data: Array(chartData.length).fill(Rlimits?.LCL),
+        label: "LCL S",
+        data: Array(chartData.length).fill(Slimits?.LCL),
         borderColor: "red",
         borderDash: [5, 5],
         pointRadius: 0,
@@ -127,9 +126,9 @@ export const XRmiddle = () => {
         <Line data={xbarChartData} />
       </div>
 
-      <h2>Контрольная карта R (Размахи)</h2>
+      <h2>Контрольная карта S (Стандартные отклонения)</h2>
       <div style={{ width: "100%", height: "500px", marginBottom: "30px" }}>
-        <Line data={rChartData} />
+        <Line data={sChartData} />
       </div>
 
       <button

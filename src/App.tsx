@@ -25,7 +25,6 @@ export const App = () => {
   return (
     <>
       <Navbar />
-      {!isAuthorized && <AuthForm />}
 
       {isAuthorized ? (
         <>

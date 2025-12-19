@@ -25,6 +25,8 @@ export const userApi = serviceApi.injectEndpoints({
           id: number;
           name: string;
           unit: string;
+          upperLimit: string;
+          lowerLimit: string;
           details: string[];
           createdAt: string;
         }[];

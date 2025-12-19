@@ -11,15 +11,19 @@ export const MeasurementsModal = ({ parameter, onClose }: any) => {
   const [updateParam] = useUpdateParamMutation();
   const [details, setDetails] = useState<string[]>([]);
   const [buffer, setBuffer] = useState<string>();
+  const [upperLimit, setUpperLimit] = useState<string>("");
+  const [lowerLimit, setLowerLimit] = useState<string>("");
 
   const handleSave = () => {
     if (parameter?.id && details?.length)
-      updateParam({ id: parameter.id, details });
+      updateParam({ id: parameter.id, details, upperLimit, lowerLimit });
   };
 
   useEffect(() => {
     if (parameter?.details?.length) {
       setDetails(parameter.details);
+      setUpperLimit(parameter?.upperLimit || 0);
+      setLowerLimit(parameter?.lowerLimit || 0);
     }
   }, [parameter]);
 
@@ -39,13 +43,31 @@ export const MeasurementsModal = ({ parameter, onClose }: any) => {
         )}
       </div>
 
-      <div className={styles.select__wrapper}>
+      {/* <div className={styles.select__wrapper}>
         <h4>Размер подгруппы</h4>
         <select>
           <option value="5">5 элементов</option>
           <option value="6">6 элементов</option>
           <option value="7">7 элементов</option>
         </select>
+      </div> */}
+      <div style={{ display: "flex" }}>
+        <div>
+          <h3>Нижнее отклонение</h3>
+          <input
+            type="text"
+            value={lowerLimit}
+            onChange={(event) => setLowerLimit(event.target.value)}
+          />
+        </div>
+        <div>
+          <h3>Верхнее отклонение</h3>
+          <input
+            type="text"
+            value={upperLimit}
+            onChange={(event) => setUpperLimit(event.target.value)}
+          />
+        </div>
       </div>
       <div className={styles.add__detail}>
         <input

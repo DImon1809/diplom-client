@@ -10,7 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useLazyCalculateXRmiddleQuery } from "../../../store/calculate/calculateApi";
+import { useLazyCalculateIMRcardQuery } from "../../../store/calculate/calculateApi";
 
 ChartJS.register(
   CategoryScale,
@@ -23,29 +23,26 @@ ChartJS.register(
 );
 
 interface DataItem {
-  xbar: number;
-  r: number;
+  value: number;
+  MR: number | null;
 }
 
-export const XRmiddle = () => {
-  const [calculate, { isLoading }] = useLazyCalculateXRmiddleQuery();
+export const ControlChartIMR: React.FC = () => {
+  const [calculate, { isLoading }] = useLazyCalculateIMRcardQuery();
   const [chartData, setChartData] = useState<DataItem[]>([]);
-  const [XbarLimits, setXbarLimits] = useState<{
-    UCL: number;
-    LCL: number;
-  } | null>(null);
-  const [Rlimits, setRlimits] = useState<{ UCL: number; LCL: number } | null>(
+  const [ILimits, setILimits] = useState<{ UCL: number; LCL: number } | null>(
+    null
+  );
+  const [MRlimits, setMRlimits] = useState<{ UCL: number; LCL: number } | null>(
     null
   );
 
   const handleClick = async () => {
     try {
       const result = await calculate().unwrap();
-
-      // Устанавливаем данные и пределы из ответа сервера
       setChartData(result.chartData);
-      setXbarLimits(result.XbarLimits);
-      setRlimits(result.Rlimits);
+      setILimits(result.ILimits);
+      setMRlimits(result.MRlimits);
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
     }
@@ -54,37 +51,36 @@ export const XRmiddle = () => {
   if (!chartData.length) {
     return (
       <div>
-        Нажмите для построения X̄-R
+        Нажмите для построения I–MR
         <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить контрольные карты"}
+          {isLoading ? "Загрузка..." : "Построить I–MR карту"}
         </button>
       </div>
     );
   }
 
-  const labels = chartData.map((_, i) => `Подгруппа ${i + 1}`);
+  const labels = chartData.map((_, i) => `Индивидуум ${i + 1}`);
 
-  // Данные для графика X̄
-  const xbarChartData = {
+  const iChartData = {
     labels,
     datasets: [
       {
-        label: "X̄ (Среднее)",
-        data: chartData.map((d) => d.xbar),
+        label: "Индивидуальные значения",
+        data: chartData.map((d) => d.value),
         borderColor: "blue",
         backgroundColor: "blue",
         tension: 0.2,
       },
       {
         label: "UCL",
-        data: Array(chartData.length).fill(XbarLimits?.UCL),
+        data: Array(chartData.length).fill(ILimits?.UCL),
         borderColor: "red",
         borderDash: [5, 5],
         pointRadius: 0,
       },
       {
         label: "LCL",
-        data: Array(chartData.length).fill(XbarLimits?.LCL),
+        data: Array(chartData.length).fill(ILimits?.LCL),
         borderColor: "red",
         borderDash: [5, 5],
         pointRadius: 0,
@@ -92,27 +88,26 @@ export const XRmiddle = () => {
     ],
   };
 
-  // Данные для графика R
-  const rChartData = {
-    labels,
+  const mrChartData = {
+    labels: labels.slice(1),
     datasets: [
       {
-        label: "R (Размах)",
-        data: chartData.map((d) => d.r),
+        label: "Скользящие размахи",
+        data: chartData.slice(1).map((d) => d.MR),
         borderColor: "green",
         backgroundColor: "green",
         tension: 0.2,
       },
       {
-        label: "UCL R",
-        data: Array(chartData.length).fill(Rlimits?.UCL),
+        label: "UCL MR",
+        data: Array(chartData.length - 1).fill(MRlimits?.UCL),
         borderColor: "red",
         borderDash: [5, 5],
         pointRadius: 0,
       },
       {
-        label: "LCL R",
-        data: Array(chartData.length).fill(Rlimits?.LCL),
+        label: "LCL MR",
+        data: Array(chartData.length - 1).fill(MRlimits?.LCL),
         borderColor: "red",
         borderDash: [5, 5],
         pointRadius: 0,
@@ -122,14 +117,14 @@ export const XRmiddle = () => {
 
   return (
     <div style={{ width: "900px", margin: "0 auto" }}>
-      <h2>Контрольная карта X̄ (Средние)</h2>
+      <h2>I-карта (индивидуальные значения)</h2>
       <div style={{ width: "100%", height: "500px", marginBottom: "50px" }}>
-        <Line data={xbarChartData} />
+        <Line data={iChartData} />
       </div>
 
-      <h2>Контрольная карта R (Размахи)</h2>
+      <h2>MR-карта (скользящие размахи)</h2>
       <div style={{ width: "100%", height: "500px", marginBottom: "30px" }}>
-        <Line data={rChartData} />
+        <Line data={mrChartData} />
       </div>
 
       <button
