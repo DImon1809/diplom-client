@@ -17,8 +17,8 @@ export const ParameterCard = ({ parameter, number }: any) => {
   return (
     <div className={styles.parameter__card}>
       <div onClick={() => setOpen(!open)} className={styles.parameter__wrapper}>
-        <span>{`№${number}`}</span>
-        <span>{`${parameter.name} ${parameter.unit}`}</span>
+        <span>{`№${number}`}</span>{" "}
+        <span>{`${parameter.name} ${parameter.unit}`}</span>{" "}
         <span>{`Количество внесённый данных ${parameter.details.length}`}</span>
       </div>
 

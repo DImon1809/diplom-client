@@ -13,6 +13,8 @@ import { ControlChartNP } from "../Charts/ControlChartNP";
 import { ControlChartU } from "../Charts/ControlChartU";
 import { ControlChartC } from "../Charts/ControlChartC";
 
+import styles from "./style.module.scss";
+
 export const CardsPage = () => {
   const { productId } = useParams();
 
@@ -24,7 +26,7 @@ export const CardsPage = () => {
   console.log(data);
 
   return (
-    <>
+    <section className={styles.cards__section}>
       <XRmiddle />
       <ControlChartXS />
       <ControlChartMR />
@@ -34,6 +36,6 @@ export const CardsPage = () => {
       <ControlChartNP />
       <ControlChartU />
       <ControlChartC />
-    </>
+    </section>
   );
 };
