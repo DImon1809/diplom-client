@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateIMRcardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -50,12 +51,12 @@ export const ControlChartIMR: React.FC = () => {
 
   if (!chartData.length) {
     return (
-      <div>
-        Нажмите для построения I–MR
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить I–MR карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="I–MR"
+        handleClick={handleClick}
+        isForbidden={chartData.length < 100}
+        isLoading={isLoading}
+      />
     );
   }
 

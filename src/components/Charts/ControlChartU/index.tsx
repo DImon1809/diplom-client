@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateUcardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -43,12 +44,11 @@ export const ControlChartU = () => {
 
   if (!uValues.length) {
     return (
-      <div>
-        Нажмите для построения U-карту
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить U-карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="U-карту"
+        handleClick={handleClick}
+        isLoading={isLoading}
+      />
     );
   }
 

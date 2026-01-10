@@ -1,0 +1,30 @@
+.comment__card {
+  min-width: 900px;
+  min-height: 200px;
+  padding: 26px;
+  border-radius: 16px;
+  font-size: 18px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  line-height: 22px;
+  transition: height 0.3s ease;
+  animation: move 2s linear;
+
+  .row {
+    display: block;
+    margin-top: 12px;
+    line-height: 22px;
+  }
+}
+
+@keyframes move {
+  from {
+    opacity: 0.5;
+    transform: translateX(50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

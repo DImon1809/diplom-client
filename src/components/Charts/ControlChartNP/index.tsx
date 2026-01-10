@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateNPcardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -44,12 +45,11 @@ export const ControlChartNP = () => {
 
   if (!npValues.length) {
     return (
-      <div>
-        Нажмите для построения NP-карты
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить np-карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="NP-карты"
+        handleClick={handleClick}
+        isLoading={isLoading}
+      />
     );
   }
 

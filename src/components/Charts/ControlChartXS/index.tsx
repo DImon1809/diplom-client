@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateXScardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -22,12 +23,14 @@ ChartJS.register(
   Legend
 );
 
+type Props = { productId: string; forbiddenText: string };
+
 interface DataItem {
   xbar: number;
   s: number;
 }
 
-export const ControlChartXS = () => {
+export const ControlChartXS = ({ productId, forbiddenText }: Props) => {
   const [calculate, { isLoading }] = useLazyCalculateXScardQuery();
 
   const [chartData, setChartData] = useState<DataItem[]>([]);
@@ -53,12 +56,12 @@ export const ControlChartXS = () => {
 
   if (!chartData.length) {
     return (
-      <div>
-        Нажмите для построения X̄–S
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить X̄–S карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="X̄–S"
+        handleClick={handleClick}
+        isLoading={isLoading}
+        forbiddenText={forbiddenText}
+      />
     );
   }
 

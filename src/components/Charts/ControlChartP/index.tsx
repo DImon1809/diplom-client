@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculatePcardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -43,12 +44,11 @@ export const ControlChartP: React.FC = () => {
 
   if (!pValues.length) {
     return (
-      <div>
-        Нажмите для построения P-карту
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить P-карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="P-карту"
+        handleClick={handleClick}
+        isLoading={isLoading}
+      />
     );
   }
 

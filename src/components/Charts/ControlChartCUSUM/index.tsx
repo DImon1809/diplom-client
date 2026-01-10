@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateCusumcardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -43,12 +44,11 @@ export const ControlChartCUSUM: React.FC = () => {
 
   if (!numbers.length) {
     return (
-      <div>
-        Нажмите для построения CUSUM
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить CUSUM карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="CUSUM"
+        handleClick={handleClick}
+        isLoading={isLoading}
+      />
     );
   }
 

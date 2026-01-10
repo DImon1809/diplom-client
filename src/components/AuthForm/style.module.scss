@@ -33,10 +33,6 @@
       padding: 2px 6px;
       font-size: 16px;
 
-      //   &:focus ~ .label {
-      //     top: -22px;
-      //   }
-
       &:focus ~ .label,
       &:not(:placeholder-shown) ~ .label {
         top: -22px;

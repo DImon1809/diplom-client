@@ -17,17 +17,24 @@ export const ParameterCard = ({ parameter, number }: any) => {
   return (
     <div className={styles.parameter__card}>
       <div onClick={() => setOpen(!open)} className={styles.parameter__wrapper}>
-        <span>{`№${number}`}</span>{" "}
-        <span>{`${parameter.name} ${parameter.unit}`}</span>{" "}
-        <span>{`Количество внесённый данных ${parameter.details.length}`}</span>
+        <div className={styles.name__wrapper}>
+          <span>{`№${number}`}</span>{" "}
+          <span>{`Измеряемый параметр - "${parameter.name}" (${parameter.unit})`}</span>{" "}
+        </div>
+        <span>{`Количество внесённый данных: ${parameter.details.length}`}</span>
       </div>
 
       {open && (
         <div className={styles.buttons}>
-          <button onClick={() => setShowList(true)}>Список</button>
           <button
-            style={{ marginLeft: 8 }}
+            onClick={() => setShowList(true)}
+            className={styles.list__button}
+          >
+            Список
+          </button>
+          <button
             onClick={() => navigate(`/cards/${parameter?.id || ""}`)}
+            className={styles.controls__button}
           >
             Контрольные карты
           </button>

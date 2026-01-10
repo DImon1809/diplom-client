@@ -2,13 +2,42 @@
   margin-bottom: 16px;
 
   .parameter__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     cursor: pointer;
     font-weight: 600;
     padding: 8px;
     border-bottom: 1px solid #eee;
+
+    .name__wrapper {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    span {
+      font-size: 18px;
+    }
   }
 
   .buttons {
-    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 12px;
+    padding-bottom: 0;
+
+    .list__button,
+    .controls__button {
+      outline: 0;
+      border: 0;
+      background-color: #000;
+      cursor: pointer;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: #fff;
+      font-size: 15px;
+    }
   }
 }

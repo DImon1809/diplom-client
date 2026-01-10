@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateCcardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -44,12 +45,11 @@ export const ControlChartC: React.FC = () => {
 
   if (!cValues.length) {
     return (
-      <div>
-        Нажмите для построения C-карты
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить C-карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="C-карты"
+        handleClick={handleClick}
+        isLoading={isLoading}
+      />
     );
   }
 

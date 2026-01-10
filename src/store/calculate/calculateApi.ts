@@ -2,9 +2,12 @@ import { serviceApi } from "../serviceApi";
 
 export const calculateApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
-    calculateXRmiddle: builder.query<any, void>({
-      query: () => ({
+    calculateXRmiddle: builder.query<any, { id: string }>({
+      query: ({ id }) => ({
         url: "/api/calculate/xrmiddle",
+        params: {
+          id,
+        },
       }),
     }),
     calculateXScard: builder.query<any, void>({

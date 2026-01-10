@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateMRcardQuery } from "../../../store/calculate/calculateApi";
+import { BuildChartLine } from "../BuildChartLine";
 
 ChartJS.register(
   CategoryScale,
@@ -50,12 +51,11 @@ export const ControlChartMR = () => {
 
   if (!chartData.length) {
     return (
-      <div>
-        Нажмите для построения M–R
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить M–R карту"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="M–R"
+        handleClick={handleClick}
+        isLoading={isLoading}
+      />
     );
   }
 

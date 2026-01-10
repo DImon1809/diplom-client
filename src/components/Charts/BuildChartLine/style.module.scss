@@ -1,0 +1,78 @@
+.chart__line {
+  width: 1100px;
+  margin-top: 20px;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid rgba(128, 128, 128, 0.5);
+
+  .text__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .text {
+      font-size: 20px;
+    }
+
+    .alert {
+      font-size: 18px;
+      color: red;
+    }
+  }
+
+  .build__button {
+    min-width: 245px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 0;
+    border: 0;
+    background-color: #000;
+    cursor: pointer;
+    padding: 14px 16px;
+    color: #fff;
+    font-size: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.7;
+        transform: translateY(-2px);
+      }
+    }
+
+    &:active {
+      opacity: 0.7;
+      transform: translateY(-2px);
+    }
+
+    &.disable {
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .loading {
+      width: 26px;
+      height: 26px;
+      display: block;
+      border: 4px dotted #fff;
+      border-radius: 50%;
+      animation: rotate infinite linear 1s;
+    }
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +12,12 @@ import {
 import { Line } from "react-chartjs-2";
 import { useLazyCalculateXRmiddleQuery } from "../../../store/calculate/calculateApi";
 
+import { BuildChartLine } from "../BuildChartLine";
+import { CommentCard } from "../CommentCard";
+
+import styles from "./style.module.scss";
+import { useAppSelector } from "../../../store";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,49 +28,96 @@ ChartJS.register(
   Legend
 );
 
+type Props = { productId: string; forbiddenText: string };
+
 interface DataItem {
   xbar: number;
   r: number;
 }
 
-export const XRmiddle = () => {
+export const XRmiddle = ({ productId, forbiddenText }: Props) => {
+  const { parameters } = useAppSelector((state) => state.userSlice);
   const [calculate, { isLoading }] = useLazyCalculateXRmiddleQuery();
   const [chartData, setChartData] = useState<DataItem[]>([]);
   const [XbarLimits, setXbarLimits] = useState<{
     UCL: number;
     LCL: number;
   } | null>(null);
+  const [comment, setComment] = useState<string>("");
   const [Rlimits, setRlimits] = useState<{ UCL: number; LCL: number } | null>(
     null
   );
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+
+  const commentRef = useRef<HTMLDivElement>(null);
 
   const handleClick = async () => {
     try {
-      const result = await calculate().unwrap();
+      setComment("");
 
-      // Устанавливаем данные и пределы из ответа сервера
+      const result = await calculate({ id: productId }).unwrap();
+
+      setIsTypingComplete(false);
+
       setChartData(result.chartData);
       setXbarLimits(result.XbarLimits);
       setRlimits(result.Rlimits);
+      setComment(result.comment);
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
     }
   };
 
+  const scrollToComment = () => {
+    if (commentRef.current) {
+      commentRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      setTimeout(() => {
+        if (commentRef.current) {
+          commentRef.current.style.boxShadow = "none";
+        }
+      }, 1500);
+    }
+  };
+
+  useEffect(() => {
+    if (comment && !isTypingComplete) {
+      const timer = setTimeout(() => {
+        scrollToComment();
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [comment, isTypingComplete]);
+
+  useEffect(() => {
+    const param = parameters?.find((p) => p.id === Number(productId));
+
+    if (param?.xrMiddle) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setChartData(param.xrMiddle.chartData);
+      setXbarLimits(param.xrMiddle.XbarLimits);
+      setRlimits(param.xrMiddle.Rlimits);
+      setComment(param.xrMiddle.comment);
+    }
+  }, [parameters]);
+
   if (!chartData.length) {
     return (
-      <div>
-        Нажмите для построения X̄-R
-        <button onClick={handleClick} disabled={isLoading}>
-          {isLoading ? "Загрузка..." : "Построить контрольные карты"}
-        </button>
-      </div>
+      <BuildChartLine
+        text="X̄-R"
+        handleClick={handleClick}
+        isLoading={isLoading}
+        forbiddenText={forbiddenText}
+      />
     );
   }
 
   const labels = chartData.map((_, i) => `Подгруппа ${i + 1}`);
 
-  // Данные для графика X̄
   const xbarChartData = {
     labels,
     datasets: [
@@ -92,7 +145,6 @@ export const XRmiddle = () => {
     ],
   };
 
-  // Данные для графика R
   const rChartData = {
     labels,
     datasets: [
@@ -132,12 +184,23 @@ export const XRmiddle = () => {
         <Line data={rChartData} />
       </div>
 
+      <div
+        ref={commentRef}
+        style={{ margin: "30px 0", scrollMarginTop: "20px" }}
+      >
+        <CommentCard comment={comment || ""} thinkingDelay={30} />
+      </div>
+
       <button
         onClick={handleClick}
         disabled={isLoading}
-        style={{ padding: "10px 20px", fontSize: "16px" }}
+        className={styles.repeat__button}
       >
-        {isLoading ? "Загрузка..." : "Обновить данные"}
+        {isLoading ? (
+          <span className={styles.loading}></span>
+        ) : (
+          "Обновить данные"
+        )}
       </button>
     </div>
   );

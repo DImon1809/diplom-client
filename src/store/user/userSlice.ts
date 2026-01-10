@@ -5,11 +5,19 @@ import { userApi } from "./userApi";
 export interface IinitialState {
   jwtToken: string;
   isAuthorized: boolean;
+  parameters:
+    | {
+        id: number;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        xrMiddle: any;
+      }[]
+    | null;
 }
 
 const initialState: IinitialState = {
   isAuthorized: false,
   jwtToken: "",
+  parameters: null,
 };
 
 export const userSlice = createSlice({
@@ -38,6 +46,30 @@ export const userSlice = createSlice({
       ) => {
         state.isAuthorized = true;
         state.jwtToken = action.payload.jwtToken;
+      }
+    );
+
+    builder.addMatcher(
+      userApi.endpoints.current.matchFulfilled,
+      (
+        state,
+        action: PayloadAction<{
+          id: number;
+          email: string;
+          parameters: {
+            id: number;
+            name: string;
+            unit: string;
+            upperLimit: string;
+            lowerLimit: string;
+            details: string[];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            xrMiddle: any;
+            createdAt: string;
+          }[];
+        }>
+      ) => {
+        state.parameters = action.payload.parameters;
       }
     );
   },

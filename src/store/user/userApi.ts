@@ -28,6 +28,8 @@ export const userApi = serviceApi.injectEndpoints({
           upperLimit: string;
           lowerLimit: string;
           details: string[];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          xrMiddle: any;
           createdAt: string;
         }[];
       },
